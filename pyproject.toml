@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "caesar"
+version = "0.1.0"
+description = ""
+authors = ["David Lachut <dslachut@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+dash = "^2.13.0"
+plotly = "^5.17.0"
+psycopg = {extras = ["binary"], version = "^3.1.12"}
+openpyxl = "^3.1.2"
+dash-bootstrap-components = "^1.5.0"
+dash-mantine-components = "^0.12.1"
+pandas = "^2.1.1"
+
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.12.0"
+black = {extras = ["jupyter"], version = "^23.9.1"}
+pygount = "^1.6.1"
+jupyter = "^1.0.0"
+jupyterlab = "^4.0.6"
+jupyter-dash = "^0.4.2"
+ipykernel = "^6.25.2"
+pytest = "^7.4.2"
+
+
+[tool.poetry.scripts]
+caesar = "caesar.gaius:main"
+
+[tool.isort]
+profile = "black"
+known_first_party = "caesar"
+
+[tool.black]
+line-length = 120
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
