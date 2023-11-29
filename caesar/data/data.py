@@ -13,8 +13,8 @@ def ar_crops():
     for i, obj in enumerate(hexen_json):
         hexen_json[i]["properties"][
             "tooltip"
-        ] = f"{obj['properties']['crop_name']}, {obj['properties']['elev_range']:.2f}m elev chg"
+        ] = f"{obj['properties']['crop_name']}, {obj['properties']['elev_range']:.2f}m elev chg, {obj['properties']['elev_max']:.2f}m elev max"
         hexen_json[i]["properties"]["color"] = obj["properties"]["crop_color"][:-2]
-        # if hexen_json[i]["properties"]["name"] == "Woody Wetlands":
-        #    hexen_json[i]["properties"]["icon"] = "forestwetlands.png"
+        if hexen_json[i]["properties"]["crop_name"] == "Woody Wetlands":
+            hexen_json[i]["properties"]["icon"] = "bw-swamp.png"
     return {"type": "FeatureCollection", "features": hexen_json}

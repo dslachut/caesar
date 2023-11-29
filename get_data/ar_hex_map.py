@@ -30,7 +30,7 @@ from shapely.geometry import Polygon
 from shapely.ops import transform
 from tqdm import tqdm
 
-res = 7
+res = 6  # =5->"10.5mi" hex, =6->"4mi" hex, =7->"1.5mi" hex , =10->"144yd" hex
 cdl = "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2022_30m_cdls.zip"
 states = "https://www2.census.gov/geo/tiger/TIGER2022/STATE/tl_2022_us_state.zip"
 elevation = "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1/TIFF/USGS_Seamless_DEM_1.vrt"
@@ -59,7 +59,7 @@ def most_common_landcover(ds: rasterio.DatasetReader, shp: Polygon) -> int:
 
 def elev_range(ds: rasterio.DatasetReader, shp: Polygon) -> float:
     elevs = rasterio.mask.mask(ds, [shp], crop=True, nodata=np.nan)[0]
-    return np.nanmax(elevs) - np.nanmin(elevs)
+    return np.nanmax(elevs) - np.nanmin(elevs), np.nanmax(elevs)
 
 
 def get_data(tmpdir: str):
@@ -97,11 +97,13 @@ def get_data(tmpdir: str):
     with rasterio.open(f"/vsicurl/{elevation}") as ds:
         transformer = pyproj.Transformer.from_crs("epsg:4326", ds.crs, always_xy=True).transform
         gdf["projected"] = gdf.geometry.progress_apply(lambda h: transform(transformer, h))
-        gdf["elev_range"] = gdf["projected"].progress_apply(lambda x: elev_range(ds, x))
+        gdf[["elev_range", "elev_max"]] = gdf.progress_apply(
+            lambda x: elev_range(ds, x.projected), axis=1, result_type="expand"
+        )
     # Write it out
     print(gdf)
     print("Writing...", flush=True)
-    gdf[["geometry", "crop_name", "crop_color", "elev_range"]].to_file(
+    gdf[["geometry", "crop_name", "crop_color", "elev_range", "elev_max"]].to_file(
         "../caesar/data/ar_crops.jsonl",
         "GeoJSONSeq",
     )
