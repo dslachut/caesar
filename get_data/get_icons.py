@@ -8,7 +8,8 @@ from os import mkdir
 from os.path import exists
 from urllib.request import urlretrieve
 
-icons = "https://worldographer.com/releases/multicolored-classic.zip"
+# icons = "https://worldographer.com/releases/multicolored-classic.zip"
+icons = "https://worldographer.com/releases/bw-icons.zip"
 
 
 def get_icons(tmpdir):
