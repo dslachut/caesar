@@ -30,22 +30,27 @@ crop_layer = dl.GeoJSON(
     hoverStyle=arrow_function(dict(fillOpacity=0.9, dashArray="")),
 )
 
+__the_map_itself = dl.Map(
+    [
+        dl.TileLayer(
+            # url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            # attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+        ),
+        crop_layer,
+    ],
+    center=dict(lat=36.1, lng=-94.2),
+    zoom=12,
+    style={"height": "90vh"},
+    id="my-map",
+)
+
 map_div = dbc.Container(
     [
         dbc.Row(
             [
                 dbc.Col(
                     [
-                        dl.Map(
-                            [
-                                dl.TileLayer(),
-                                crop_layer,
-                            ],
-                            center=dict(lat=36.1, lng=-94.2),
-                            zoom=12,
-                            style={"height": "90vh"},
-                            id="my-map",
-                        ),
+                        __the_map_itself,
                     ],
                     width=12,
                 ),
